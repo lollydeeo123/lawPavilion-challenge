@@ -20,6 +20,7 @@ Route::get('/', function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/passform', 'PassformController@index')->name('passform');
     Route::resource('/dbaselist', 'dbaselist');
+    Route::resource('/database', 'database');
     Route::resource('dumpfiles', 'dumpfiles');
 
 //});

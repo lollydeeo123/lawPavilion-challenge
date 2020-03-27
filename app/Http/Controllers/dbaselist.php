@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use PDO;
+
 use mysqli;
-use App\User;
+
 class dbaselist extends Controller
 {
     /**
@@ -33,9 +32,9 @@ class dbaselist extends Controller
            //get all sent variables
             $username = $request->username;
             $password = $request->password;
-            $database = $request->dbname;
+
             $host = $request->hostname;
-            $mysqli = new mysqli("localhost", $username, $password, $database);
+
             //connect to database and exit if not valid
 //select all tables from the database
             $schema = DB::table('information_schema.TABLES')
@@ -52,7 +51,7 @@ class dbaselist extends Controller
 
     public function store(Request $request)
     {
-        $user =  User::where('name','=',Auth::user()->name)->first();
+
         if (Auth::user()){
 
 
@@ -60,7 +59,7 @@ class dbaselist extends Controller
             $password = $request->password;
             $dbs = $request->mydbase;
             $host = $request->hostname;
-            $mysqli = new mysqli("localhost", $username, $password, $dbs);
+            $mysqli = new mysqli($host, $username, $password, $dbs);
             //connect to database and exit if not valid
 
             $schema = DB::table('information_schema.TABLES')
@@ -75,18 +74,13 @@ class dbaselist extends Controller
                ('error o'.$mysqli->error); // or $mysqli->error_list
             }
             else {
-                // as of php 5.4 mysqli_result implements Traversable, so you can use it with foreach
-                //foreach( $result as $row ) {
+
                 while ($row = mysqli_fetch_row($result)) {
                     $tables[] = $row[0];
                 }
-                //$pdo = new PDO("mysql:host=$host;port=$port", $user, $password);
-            }
-//Execute a "SHOW DATABASES" SQL query.
-            // $stmt = $pdo->query('SHOW DATABASES');
 
-//Fetch the columns from the returned PDOStatement
-            //$databases = $stmt->fetchAll(PDO::FETCH_COLUMN);'tables'
+            }
+
 
 
         }
