@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use PDO;
-use mysqli;
+
 use App\User;
 use App\Dumplog;
-use MySQLDump;
+
 use Storage;
 
 class dumpfiles extends Controller
@@ -37,7 +35,7 @@ class dumpfiles extends Controller
     public function show(Request $request){
 
 
-        $user =  User::where('name','=',Auth::user()->name)->first();
+
         if (Auth::user()){
 
             $dbs = $request->dbs;
@@ -55,7 +53,7 @@ class dumpfiles extends Controller
 
     public function store(Request $request)
     {
-        $user =  User::where('name','=',Auth::user()->name)->first();
+
         if (Auth::user()){
 
 
@@ -69,22 +67,16 @@ class dumpfiles extends Controller
             $allmytables1 =  $request->allmytables;
             $mytables1 =  $request->mytables;
 
-            /*$db = new mysqli($host, $username, $password, $dbs);
-            $dump = new MySQLDump($db);
-
-           $dump->save('dump' . date('Y-m-d H-i') . '.sql');*/
-          //exec('mysqldump -user=$username -password=$password -host=$host $dbs > /c:/backups/file.sql');
-//"\"C:\\Program Files\\MySQL\\MySQL Server 4.1\\bin\\mysqldump.exe\" --opt --skip-extended-insert --complete-insert -h ".$DB_HOST." -u ".$DB_USER." -p ".$DB_PASS." ".$DB_NAME." > backup.sql";
-
-            // $command = "\"C:\\xampp\\mysql\\bin\\mysqldump.exe\" --opt --skip-extended-insert --complete-insert -h ".$host." -user ".$username." -password".$password." ".$dbs." > backup.sql";;
-
 
 
 
             $filename = 'backups' . date('Y-m-d') . '.sql';
             $allmytables = substr($allmytables1, 1);
             $allmytable=explode(',',$allmytables1);
-
+            $path_to_dump = env("PATH_TO_DUMP", "Path not set");
+            $db_port=env("DB_PORT","3306");
+            $cloud_ip=env("CLOUD_IP","34.67.182.226");
+            $cloud_bucket=env("CLOUD_BUCKET","Buckets/store_of_stuff");
             $mytables = substr($mytables1, 1);
             $mytable=explode(',',$mytables);
             $mytablestr=str_replace(","," ",$mytables);
@@ -96,9 +88,9 @@ class dumpfiles extends Controller
                 //local drive or google drive?
                 if( $dumpsite=='Local Drive'){
                     //echo $dumpsite;
-                $command = 'C:\xampp\mysql\bin\mysqldump --opt -h '.$host.' -u '.$username.' -p'.$password.' '.$dbs.' > '.$filename.' 2>&1';
+                $command = $path_to_dump.' --opt -h '.$host.' -u '.$username.' -p'.$password.' '.$dbs.' > '.$filename.' 2>&1';
                 }else {
-                    $command = 'C:\xampp\mysql\bin\mysqldump --opt -h 34.67.182.226 -P 3306 -u ' . $username . ' -p' . $password . ' ' . $dbs . '--hex-blob --skip-triggers --master-data=1 --order-by-primary --compact --no-autocommit  default-character-set=utf8  --single-transaction --set-gtid-purged=on | gzip |gsutil cp - gs: > Buckets/store_of_stuff 2>&1';
+                    $command = $path_to_dump.' --opt -h '.$cloud_ip.' -P '.$db_port.' -u ' . $username . ' -p' . $password . ' ' . $dbs . '--hex-blob --skip-triggers --master-data=1 --order-by-primary --compact --no-autocommit  default-character-set=utf8  --single-transaction --set-gtid-purged=on | gzip |gsutil cp - gs: > '.$cloud_bucket.' 2>&1';
                     //echo $dumpsite;
                      }
             }else{//tables were selected..not a full dump
@@ -106,9 +98,9 @@ class dumpfiles extends Controller
                 $type='Partial Dump';//$command='ff';
                 if( $dumpsite=='Local Drive'){
                     //echo $dumpsite;
-                    $command = 'C:\xampp\mysql\bin\mysqldump --opt -h '.$host.' -u '.$username.' -p'.$password.' '.$dbs.' '.$mytablestr.' > '.$filename.' 2>&1';
+                    $command = $path_to_dump.' --opt -h '.$host.' -u '.$username.' -p'.$password.' '.$dbs.' '.$mytablestr.' > '.$filename.' 2>&1';
                 }else {
-                    $command = 'C:\xampp\mysql\bin\mysqldump --opt -h 34.67.182.226 -P 3306 -u ' . $username . ' -p' . $password . ' ' . $dbs .''.$mytablestr. '--hex-blob --skip-triggers --master-data=1 --order-by-primary --compact --no-autocommit  default-character-set=utf8  --single-transaction --set-gtid-purged=on | gzip |gsutil cp - gs: > Buckets/store_of_stuff 2>&1';
+                    $command = $path_to_dump.' --opt -h '.$cloud_ip.' -P '.$db_port.' -u ' . $username . ' -p' . $password . ' ' . $dbs .''.$mytablestr. '--hex-blob --skip-triggers --master-data=1 --order-by-primary --compact --no-autocommit  default-character-set=utf8  --single-transaction --set-gtid-purged=on | gzip |gsutil cp - gs: > '.$cloud_bucket.' 2>&1';
                     //echo $dumpsite;
                 }
 

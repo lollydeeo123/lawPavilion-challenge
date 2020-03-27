@@ -19,32 +19,7 @@
 
 
 
-{{--///////////////////////example code
 
-                        {!! Form::open(array('action' => 'ClientsController@display','method' => 'GET','name'=>'f1' , 'id'=>'form_id'))!!}
-                        <br/>
-                        @foreach($clients as $client)
-                            <div class="form-group">
-                                {!! Form::checkbox("agree[]", $client->email, null,['id' => $client->email], ['class' => 'questionCheckBox']), $client->email !!}
-                                <br/>
-                            </div>
-                        @endforeach
-                        <div class="form-group">
-                            {!! Form::submit('Send Mail',['class' => 'btn btn-primary form-control']) !!}
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::button('Select All',['class' => 'btn btn-info form-control','onClick'=>'select_all("agree", "1")']) !!}
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::button('Clear All',['class' => 'btn btn-danger form-control','onClick'=>'select_all("agree", "0")']) !!}
-                        </div>
-
-                        {!! Form::close() !!}
-
-
-///////////////////////////////////////////// --}}
 
 
                         <form class="form-horizontal" id="form" role="form" method="POST" action="/dumpfiles">
@@ -121,7 +96,7 @@
                                                         <label for="disk" class="col-md-4 col-form-label text-md-right">{{ 'Select Where to dump database/tables' }}</label>
 
                                                         <div class="col-md-6">
-                                                            <select id="dumpsite" class="form-control @error('dumpsite') is-invalid @enderror" name="dumpsite" required autocomplete="current-password">
+                                                            <select title= "dumpsite" id="dumpsite" class="form-control @error('dumpsite') is-invalid @enderror" name="dumpsite" required autocomplete="current-password">
 
 
                                                                 <option value="Local Drive"  selected="selected" >Local Drive </option>

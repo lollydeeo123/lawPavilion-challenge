@@ -30,6 +30,7 @@ class dbaselist extends Controller
         if (Auth::user()){
 
            //get all sent variables
+            $user=Auth::user();
             $username = $request->username;
             $password = $request->password;
 
@@ -44,7 +45,7 @@ class dbaselist extends Controller
 
 
         }
-        return view('home',compact('tables','schema','username','password','host'));
+        return view('home',compact('tables','schema','username','password','host','user'));
     }
     public function add(){
     }
@@ -54,7 +55,7 @@ class dbaselist extends Controller
 
         if (Auth::user()){
 
-
+            $user=Auth::user();
             $username = $request->username;
             $password = $request->password;
             $dbs = $request->mydbase;
@@ -84,7 +85,7 @@ class dbaselist extends Controller
 
 
         }
-        return view('dbaselist',compact('schema','dbs','tables','username','password','host'));
+        return view('dbaselist',compact('schema','dbs','tables','username','password','host','user'));
         //return print_r($schema);
     }
 }

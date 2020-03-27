@@ -54,7 +54,7 @@
                     </td>
 
                     <td>
-                        {{$table->username}}
+                        {{$table->user}}
                     </td>
                     <td>
                         {{$table->type}}
